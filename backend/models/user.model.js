@@ -11,10 +11,12 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
             validate: {
+                // Custom validation for password length
                 validator: function (value) {
-                    return value.length >= 8; // Custom validation for password length
+                    return value.length >= 8;
                 },
-                message: 'Password must be at least 8 characters long.', // Custom error message
+                // Custom error message
+                message: 'Password must be at least 8 characters long.',
             },
         },
         otp: { type: String, default: '' },
@@ -26,4 +28,4 @@ const userSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-export default User = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);
