@@ -7,7 +7,16 @@ const userSchema = new mongoose.Schema(
             required: true,
         },
         email: { type: String, required: true, unique: true },
-        password: { type: String, required: true },
+        password: {
+            type: String,
+            required: true,
+            validate: {
+                validator: function (value) {
+                    return value.length >= 8; // Custom validation for password length
+                },
+                message: 'Password must be at least 8 characters long.', // Custom error message
+            },
+        },
         otp: { type: String, default: '' },
         otpExpiry: { type: Number, default: 0 },
         isVerified: { type: Boolean, default: false },
