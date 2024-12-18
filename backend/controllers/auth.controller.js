@@ -7,6 +7,7 @@ import {
     validatePassword,
     sanitizeInput,
 } from '../utils/inputValidation.js';
+import transporter from '../config/nodemailer.js';
 
 //Register Controller
 export const register = async (req, res) => {
@@ -75,6 +76,18 @@ export const register = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
 
+        //sending welcome email
+        const mailOptions = {
+            from: process.env.SENDER_EMAIL,
+            to: cleanEmail,
+            subject: 'Welcome to our MERN Auth System',
+            text: `<h1>MERN Auth System</h1><br>Welcome ${cleanName}, to our MERN Auth System, where we are creating a full authentication system.
+            <br>
+            Your account has been created with email id: ${cleanEmail}.`,
+        };
+
+        const mail = await transporter.sendMail(mailOptions);
+        console.log('Message Sent: %s', mail.messageId);
         // Returning a successful response with the token
         return res.json({ success: true, token });
     } catch (error) {
