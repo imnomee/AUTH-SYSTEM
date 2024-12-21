@@ -7,9 +7,10 @@ import authRoutes from './routes/auth.routes.js';
 import userRoutes from './routes/user.routes.js';
 
 const app = express();
+const allowedOrigins = ['http://localhost:5173'];
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ credentials: true }));
+app.use(cors({ credentials: true, origin: allowedOrigins }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
