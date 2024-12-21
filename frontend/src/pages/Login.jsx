@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { assets } from '../assets/assets';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
@@ -8,8 +8,8 @@ import axios from 'axios';
 
 const Login = () => {
     const navigate = useNavigate();
-    const { backendUrl, setIsLoggedIn } = useContext(AppContext);
-    const [state, setState] = useState('Sign Up');
+    const { backendUrl, setIsLoggedIn, getUserData } = useContext(AppContext);
+    const [state, setState] = useState('Login');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -29,6 +29,7 @@ const Login = () => {
                 );
                 if (data.success) {
                     setIsLoggedIn(true);
+                    getUserData();
                     navigate('/');
                 } else {
                     toast.error(data.message);
@@ -43,6 +44,7 @@ const Login = () => {
                 );
                 if (data.success) {
                     setIsLoggedIn(true);
+                    getUserData();
                     navigate('/');
                 } else {
                     toast.error(data.message);
@@ -75,7 +77,7 @@ const Login = () => {
                             <input
                                 onChange={(e) => setName(e.target.value)}
                                 value={name}
-                                className="bg-transparent outline-none"
+                                className="bg-transparent outline-none w-full"
                                 type="text"
                                 placeholder="Full Name"
                                 required=""
@@ -86,7 +88,7 @@ const Login = () => {
                         <input
                             onChange={(e) => setEmail(e.target.value)}
                             value={email}
-                            className="bg-transparent outline-none"
+                            className="bg-transparent outline-none w-full"
                             type="email"
                             placeholder="Email address"
                             required=""
@@ -96,7 +98,7 @@ const Login = () => {
                         <input
                             onChange={(e) => setPassword(e.target.value)}
                             value={password}
-                            className="bg-transparent outline-none"
+                            className="bg-transparent outline-none w-full"
                             type="password"
                             placeholder="Password"
                             required=""
