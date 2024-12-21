@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { assets } from '../assets/assets';
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
+import axios from 'axios';
+import { AppContext } from '../context/AppContext';
+import { toast } from 'react-toastify';
 
 const VerifyEmail = () => {
     const navigate = useNavigate();
@@ -15,6 +18,40 @@ const VerifyEmail = () => {
     const handleKeyDown = (e, i) => {
         if (e.key === 'Backspace' && e.target.value === '' && i > 0) {
             inputRefs.current[i - 1].focus();
+        }
+    };
+
+    const handlePaste = (e) => {
+        const paste = e.clipboardData.getData('text').match(/\d+/g).join('');
+        const pasteArray = paste.split('');
+        console.log(paste);
+        pasteArray.forEach((char, i) => {
+            if (inputRefs.current[i]) {
+                inputRefs.current[i].value = char;
+            }
+        });
+    };
+
+    const { backendUrl, isLoggedIn, userData, getUserData } =
+        useContext(AppContext);
+    const onSubmitHandler = async (e) => {
+        try {
+            e.preventDefault();
+            const otpArray = inputRefs.current.map((e) => e.value);
+            const otp = otpArray.join('');
+            const { data } = await axios.post(
+                backendUrl + '/api/auth/verify-otp',
+                { otp }
+            );
+            if (data.success) {
+                toast.success(data.message);
+                getUserData();
+                navigate('/');
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
         }
     };
 
@@ -33,7 +70,9 @@ const VerifyEmail = () => {
                 <p className="text-center mb-6 text-indigo-300">
                     Enter the 6-digit code sent to your email.
                 </p>
-                <div className="flex justify-between mb-8">
+                <div
+                    className="flex justify-between mb-8"
+                    onPaste={(e) => handlePaste(e)}>
                     {Array(6)
                         .fill(0)
                         .map((_, i) => {
@@ -51,7 +90,9 @@ const VerifyEmail = () => {
                             );
                         })}
                 </div>
-                <button className="w-full py-3 bg-gradient-to-r from-indigo-500 to-indigo-900 text-white rounded-full">
+                <button
+                    onClick={(e) => onSubmitHandler(e)}
+                    className="w-full py-3 bg-gradient-to-r from-indigo-500 to-indigo-900 text-white rounded-full">
                     Verify Email
                 </button>
             </form>

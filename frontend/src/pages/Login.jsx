@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { assets } from '../assets/assets';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
@@ -117,7 +117,7 @@ const Login = () => {
                 </form>
                 {state === 'Sign Up' ? (
                     <p className="text-center text-xs mt-4 text-gray-400">
-                        Already haave an account?&nbsp;
+                        Already have an account?&nbsp;
                         <span
                             onClick={() => setState('Login')}
                             className="text-blue-400 cursor-pointer underline">
