@@ -9,6 +9,11 @@ import {
 } from '../utils/inputValidation.js';
 import transporter from '../config/nodemailer.js';
 
+import {
+    EMAIL_VERIFY_TEMPLATE,
+    PASSWORD_RESET_TEMPLATE,
+} from '../config/emailTemplates.js';
+
 //Register Controller
 export const register = async (req, res) => {
     // Extracting user input from request body
@@ -209,6 +214,10 @@ export const sendVerifyOTP = async (req, res) => {
             Please verify your account with email id: ${user.email}.
             <br>
             Your OTP is ${otp}, use this OTP to verify your email address`,
+            html: EMAIL_VERIFY_TEMPLATE.replace('{{otp}}', otp).replace(
+                '{{email}}',
+                user.email
+            ),
         };
 
         const mail = await transporter.sendMail(mailOptions);
@@ -283,9 +292,13 @@ export const sendResetPasswordOTP = async (req, res) => {
             from: process.env.SENDER_EMAIL,
             to: user.email,
             subject: 'Reset Password for MERN Auth System',
-            text: `<h1>MERN Auth System</h1><br>${user.name},
-            <br>
-            Your OTP is ${otp}, use this OTP to update your account password.`,
+            // text: `<h1>MERN Auth System</h1><br>${user.name},
+            // <br>
+            // Your OTP is ${otp}, use this OTP to update your account password.`,
+            html: PASSWORD_RESET_TEMPLATE.replace('{{otp}}', otp).replace(
+                '{{email}}',
+                user.email
+            ),
         };
 
         const mail = await transporter.sendMail(mailOptions);
