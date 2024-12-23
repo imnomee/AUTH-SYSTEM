@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { assets } from '../assets/assets';
-import { useContext, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { AppContext } from '../context/AppContext';
 import { toast } from 'react-toastify';
@@ -55,6 +55,9 @@ const VerifyEmail = () => {
         }
     };
 
+    useEffect(() => {
+        isLoggedIn && userData && userData.isVerified && navigate('/');
+    }, [isLoggedIn, userData]);
     return (
         <div className="flex items-center justify-center min-h-screen px-6 sm:px-0 bg-gradient-to-br from-blue-200 bg-purple-100">
             <img

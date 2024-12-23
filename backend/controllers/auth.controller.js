@@ -330,7 +330,7 @@ export const verifyResetPasswordOTP = async (req, res) => {
         user.resetExpiry = 0;
         await user.save();
         return res.json({
-            success: false,
+            success: true,
             message: 'password change successful.',
         });
     } catch (error) {
