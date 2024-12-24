@@ -44,8 +44,8 @@ export const register = async (req, res) => {
     }
 
     // Sanitizing user inputs to prevent XSS attacks
-    const cleanName = sanitizeInput(name);
-    const cleanEmail = sanitizeInput(email);
+    const cleanName = sanitizeInput(name.toLowerCase());
+    const cleanEmail = sanitizeInput(email.toLowerCase());
 
     try {
         // Checking if a user with the provided email already exists
@@ -131,7 +131,7 @@ export const login = async (req, res) => {
     }
 
     // Sanitizing email input
-    const cleanEmail = sanitizeInput(email);
+    const cleanEmail = sanitizeInput(email.toLowerCase());
 
     try {
         // Finding the user by email
@@ -209,11 +209,6 @@ export const sendVerifyOTP = async (req, res) => {
             from: process.env.SENDER_EMAIL,
             to: user.email,
             subject: 'Verify MERN Auth System account',
-            text: `<h1>MERN Auth System</h1><br>${user.name},
-            <br>
-            Please verify your account with email id: ${user.email}.
-            <br>
-            Your OTP is ${otp}, use this OTP to verify your email address`,
             html: EMAIL_VERIFY_TEMPLATE.replace('{{otp}}', otp).replace(
                 '{{email}}',
                 user.email
@@ -277,7 +272,7 @@ export const sendResetPasswordOTP = async (req, res) => {
         return res.json({ success: false, message: 'Email is required' });
     }
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email: email.toLowerCase() });
         if (!user) {
             return res.json({ success: false, message: 'No User found.' });
         }
@@ -292,9 +287,6 @@ export const sendResetPasswordOTP = async (req, res) => {
             from: process.env.SENDER_EMAIL,
             to: user.email,
             subject: 'Reset Password for MERN Auth System',
-            // text: `<h1>MERN Auth System</h1><br>${user.name},
-            // <br>
-            // Your OTP is ${otp}, use this OTP to update your account password.`,
             html: PASSWORD_RESET_TEMPLATE.replace('{{otp}}', otp).replace(
                 '{{email}}',
                 user.email
@@ -325,7 +317,7 @@ export const verifyResetPasswordOTP = async (req, res) => {
     console.log(email, newPassword, otp);
 
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email: email.toLowerCase() });
         if (!user) {
             return res.json({ success: false, message: 'No User found.' });
         }
